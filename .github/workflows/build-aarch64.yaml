@@ -1,4 +1,4 @@
-name: build-client-aarch64-test
+name: build-client-aarch64
 on:
   push:
     branches:
@@ -15,7 +15,6 @@ jobs:
         distribution: 'full'
         variant: 'CS'
         version: '8.6'
-        dest: '/opt/racket'
     - run: raco pkg install --auto functional threading
     - run: raco exe -o client fire-at-home-client.rkt
     - run: raco dist dist-client client
