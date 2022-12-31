@@ -1,0 +1,27 @@
+<head>
+    <title>Fire at Home</title>
+</head>
+<body>
+    <h1>Fire at Home</h1>
+    <p>This is distributed computing, my man!</p>
+    <p>Grids: @|(string-join (map number->string (get-grid-sizes conn)) ", ")|</p>
+    <img src="/img/fire.jpg" alt="Graph" />
+    <table>
+        <thead>
+            <tr>
+                <td>Contributor</td>
+                <td>Computation time</td>
+            </tr>
+        </thead>
+        <tbody>
+            @for/list[([contributor (get-contributors conn)])]{
+                @list{
+                    <tr>
+                        <td>@|(xexpr->string (car contributor))|</td>
+                        <td>@|(~r (cdr contributor) #:precision 2)|</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</body>

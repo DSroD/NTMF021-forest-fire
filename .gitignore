@@ -1,0 +1,9 @@
+*~
+config.prod.json
+docker-compose.yml
+data/
+compiled/*
+fire-at-home/compiled/*
+fire-at-home-server
+fire-at-home-client
+dist-*
