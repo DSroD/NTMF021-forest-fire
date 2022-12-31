@@ -1,0 +1,25 @@
+name: build-client-aarch64-test
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: macos-12
+    steps:
+    - uses: actions/checkout@v2
+    - uses: Bogdanp/setup-racket@v1.9
+      with:
+        architecture: 'aarch64'
+        distribution: 'full'
+        variant: 'CS'
+        version: '8.6'
+        dest: '/opt/racket'
+    - run: raco pkg install --auto functional threading
+    - run: raco exe -o client fire-at-home-client.rkt
+    - run: raco dist dist-client client
+    - uses: actions/upload-artifact@v3
+      with:
+        name: aarch64-client
+        path: dist-client/
