@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            @for/list[([contributor (get-contributors conn)])]{
+            @for/list[([contributor (filter (lambda (d) (not (sql-null? (cdr d)))) (get-contributors conn))])]{
                 @list{
                     <tr>
                         <td>@|(xexpr->string (car contributor))|</td>

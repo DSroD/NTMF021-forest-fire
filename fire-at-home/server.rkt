@@ -7,6 +7,7 @@
          web-server/configuration/responders
          json
          xml
+         db
          data/maybe
          data/monad
          data/applicative

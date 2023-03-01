@@ -25,4 +25,4 @@ WORKDIR /usr/src/app
 
 RUN mkdir -p /usr/src/app/static/img
 RUN chmod +x /usr/src/app/bin/server
-RUN ./bin/server
+CMD ["./bin/server"]
