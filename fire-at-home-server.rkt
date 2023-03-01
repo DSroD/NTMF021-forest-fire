@@ -9,11 +9,9 @@
          racket/runtime-path
          web-server/servlet-env)
 
-(define-runtime-path config "config.prod.json")
 (create-server-folder (build-path "static" "img"))
 
-(define cfg-file (open-input-file config))
-(define cfg (read-config cfg-file))
+(define cfg (read-config-env))
 
 (define db-conn (database-connect (database-cfg cfg)))
 (database-scaffold db-conn)

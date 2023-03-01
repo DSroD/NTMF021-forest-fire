@@ -24,13 +24,22 @@
 (define (read-config cfg-in)
   (let ([cfg-hash (read-json cfg-in)])
     (do [db <- (read-db-cfg cfg-hash)]
-        [test <- (just 1)]
+        (config db))))
+
+(define (read-config-env)
+  (let ([cfg-hash (hash 'database (hash 'host (getenv "DB_HOST")
+                                        'port (getenv "DB_PORT")
+                                        'database (getenv "DB_NAME")
+                                        'user (getenv "DB_USER")
+                                        'password (getenv "DB_PASSWORD")))])
+    (do [db <- (read-db-cfg cfg-hash)]
         (config db))))
 
 (define (database-cfg cfg)
   (config-database cfg))
     
 (provide read-config
+         read-config-env
          database-cfg
          database-host
          database-port

@@ -9,3 +9,4 @@ fire-at-home-server.exe
 fire-at-home-client
 fire-at-home-client.exe
 dist-*
+*.bak

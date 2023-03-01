@@ -4,7 +4,6 @@ RUN raco pkg install --auto compiler-lib functional threading
 
 RUN mkdir -p /app
 WORKDIR /app
-COPY config.prod.json /app/config.prod.json
 COPY fire-at-home-server.rkt /app
 COPY fire-at-home/ /app/fire-at-home
 
@@ -22,6 +21,8 @@ RUN mkdir -p /usr/src/app
 
 COPY --from=build /app/dist-server/ /usr/src/app/
 
-RUN mkdir -p /static/img
+WORKDIR /usr/src/app
+
+RUN mkdir -p /usr/src/app/static/img
 RUN chmod +x /usr/src/app/bin/server
-RUN ./usr/src/app/bin/server
+RUN ./bin/server
