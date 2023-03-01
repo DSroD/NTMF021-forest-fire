@@ -1,20 +1,45 @@
 use std::collections::VecDeque;
-use std::fmt::format;
-use http::Request;
+use std::time::Instant;
+use clap::arg;
+use serde::{Deserialize, Serialize};
+use reqwest::blocking::Client;
 
-#[tokio::main]
 fn main() {
-    let k = Grid::generate(4096, 0.4).burn();
-    println!("{}", k)
+    let args = clap::Command::new("Fire-at-Home Client")
+        .version("0.1")
+        .author("Daniel Rod")
+        .about("Compute my HW please.")
+        .arg(arg!(--name <VALUE>).required(true))
+        .get_matches();
+
+    let name = args.get_one::<String>("name").expect("Parameter name is required");
+    let client = Client::builder().build().unwrap();
+
+    loop {
+        let job = get_job(&client, name).unwrap();
+        println!("Received job {} (grid: {}, p: {})", job.job_id, job.grid_size, job.tree_probability);
+        let now = Instant::now();
+        let results: Vec<u16> = (0 .. 2048).map(|_|
+            Grid::generate(job.grid_size, job.tree_probability).burn()).collect();
+        let sum: f64 = results.iter().map(|res| (*res as f64)).collect::<Vec<f64>>().iter().sum();
+        let avg = sum / (results.len() as f64);
+        let after = now.elapsed().as_secs_f64();
+        let _ = post_result(&client, &name, job.job_id, ComputationResult {
+                result: avg,
+                elapsed: after
+        });
+    }
+
 }
 
-fn getJob(name: &str) {
-    let url = format!("http://localhost/queue/{}", name).parse::<hyper::Uri>()?;
-    let host = url.host().expect("Wrong url...");
-    let port = 8000;
+fn get_job(client: &Client, name: &str) -> reqwest::Result<Job> {
+    client.get(format!("https://fire-at-home.dsrod.cz/queue/{}", name))
+        .send()?.json::<Job>()
+}
 
-    
-
+fn post_result(client: &Client, name: &str, job_id: i64, result: ComputationResult ) -> reqwest::blocking::Response {
+    client.post(format!("https://fire-at-home.dsrod.cz/result/{}/{}", name, job_id))
+        .json(&result).send().unwrap()
 }
 
 #[derive(PartialEq)]
@@ -26,19 +51,18 @@ enum Cell {
 
 #[derive(Deserialize)]
 struct Job {
+    #[serde(rename = "job-id")]
     job_id: i64,
+    #[serde(rename = "grid-size")]
     grid_size: usize,
+    #[serde(rename = "tree-probability")]
     tree_probability: f64,
 }
 
 #[derive(Serialize)]
-struct Result {
+struct ComputationResult {
     result: f64,
     elapsed: f64,
-}
-
-fn get_job(name: &str) -> Option<Job> {
-
 }
 
 struct BurningTree {
