@@ -4,7 +4,7 @@
          "database.rkt"
          "computation.rkt")
 
-(define GRID-SIZES '(32 64 128 256 512 1024 2048 4096))
+(define GRID-SIZES '(32 64 128 256 512 1024 2048))
 
 (define (populate-grid-size conn grid)
   (let ([gr-size (grid-size grid)]

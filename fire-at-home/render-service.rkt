@@ -25,11 +25,13 @@
          
 
 (define (plot-grid conn grid-sizes file-name)
-  (parameterize ([plot-y-transform  log-transform]
+  (parameterize ([plot-width 800]
+                 [plot-height 600]
+                 [plot-y-transform  log-transform]
                  [plot-y-ticks (log-ticks #:base 10)]
                  [plot-x-label "Tree probability"]
                  [plot-y-label "Burn time"]
-                 [plot-legend-anchor 'top-right])
+                 [plot-legend-anchor 'top-left])
   (do [results <- (get-results/maybe conn grid-sizes)]
       [renderers <- (pure (map-renderers grid-sizes results))]
       (pure (plot-file renderers (string-append "./static/img/" file-name ".jpg"))))))
