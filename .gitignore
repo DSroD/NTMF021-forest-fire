@@ -5,5 +5,7 @@ data/
 compiled/*
 fire-at-home/compiled/*
 fire-at-home-server
+fire-at-home-server.exe
 fire-at-home-client
+fire-at-home-client.exe
 dist-*
